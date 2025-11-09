@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# form_fill_telegram_bot_admin_only.py
-# Kullanıcıdan sadece metin ister, sabit görsel admin'e gönderilir.
+# form_fill_telegram_bot_admin_only_render.py
+# Kullanıcıdan metin alır, sabit görsel admin'e gönderilir. Render uyumlu.
 
 import logging
 from io import BytesIO
@@ -126,7 +126,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     fields = list(coords.keys())
     SESSIONS[chat_id] = {"index": 0, "fields": {f: "" for f in fields}, "order": fields}
-    await update.message.reply_text("Merhaba! Şimdi bilgileri sırasıyla gireceksiniz.\nİlk alan: " + fields[0])
+    await update.message.reply_text(
+        "Merhaba! Şimdi bilgileri sırasıyla gireceksiniz.\nİlk alan: " + fields[0]
+    )
     return WAITING_DATA
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -151,7 +153,9 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         out = render_image(session["fields"])
         if OWNER_CHAT_ID:
             out.seek(0)
-            await context.bot.send_photo(chat_id=OWNER_CHAT_ID, photo=out, caption=f"Yeni form {chat_id}")
+            await context.bot.send_photo(
+                chat_id=OWNER_CHAT_ID, photo=out, caption=f"Yeni form {chat_id}"
+            )
         SESSIONS.pop(chat_id, None)
         await update.message.reply_text("Tamamlandı. Yeni işlem için /start yazabilirsiniz.")
         return ConversationHandler.END
@@ -165,9 +169,9 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     conv = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler("start", start)],
         states={WAITING_DATA: [MessageHandler(filters.TEXT & ~filters.COMMAND, text_handler)]},
-        fallbacks=[CommandHandler('cancel', cancel)]
+        fallbacks=[CommandHandler("cancel", cancel)],
     )
     app.add_handler(conv)
     print("Bot çalışıyor...")
