@@ -10,9 +10,10 @@ from PIL import Image, ImageDraw, ImageFont
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, ConversationHandler, filters
 
-BOT_TOKEN = "8489494630:AAEtPQ323BhYSo0KTkaSjPZ41aUPlMs2kxk"  # Telegram token
+# --- AYARLAR ---
+BOT_TOKEN = "8489494630:AAEtPQ323BhYSo0KTkaSjPZ41aUPlMs2kxk"
 OWNER_CHAT_ID = 1811519811
-TEMPLATE_PATH = "template.jpg"
+TEMPLATE_PATH = "template.jpg"  # Görseli bu isimle aynı klasöre koy
 
 FONTS = {
     "Arial": "arial.ttf",
@@ -23,11 +24,77 @@ FONTS = {
 DEFAULT_SIZE = 18
 
 STYLE_MAP = {
-    "PLAKA": {"color": "#000000", "font": "Arial Black"}
+    "VERİLDİĞİ İL İLÇE": {"color": "#2b2b2b", "font": "Arial"},
+    "PLAKA": {"color": "#000000", "font": "Arial Black"},
+    "TESCİL SIRA NO": {"color": "#2b2b2b", "font": "Arial"},
+    "MARKASI": {"color": "#2b2b2b", "font": "Arial"},
+    "TİCARİ ADI": {"color": "#2b2b2b", "font": "Arial"},
+    "CİNSİ": {"color": "#2b2b2b", "font": "Arial"},
+    "CİNSİ2": {"color": "#2b2b2b", "font": "Arial"},
+    "İLK TESCİL TARİHİ": {"color": "#2b2b2b", "font": "Arial"},
+    "TESCİL TARİHİ": {"color": "#000000", "font": "Arial Black"},
+    "TİPİ": {"color": "#2b2b2b", "font": "Arial"},
+    "MODEL YILI": {"color": "#2b2b2b", "font": "Arial"},
+    "ARAÇ SINIFI": {"color": "#2b2b2b", "font": "Arial"},
+    "RENGİ": {"color": "#2b2b2b", "font": "Arial"},
+    "MOTOR NO": {"color": "#000000", "font": "Arial Black"},
+    "ŞASE NO": {"color": "#000000", "font": "Arial Black"},
+    "NET AĞIRLIĞI": {"color": "#2b2b2b", "font": "Arial"},
+    "KATAR AĞIRLIĞI": {"color": "#2b2b2b", "font": "Arial"},
+    "KOLTUK SAYISI": {"color": "#2b2b2b", "font": "Arial"},
+    "SİLİNDİR HACMİ": {"color": "#2b2b2b", "font": "Arial"},
+    "YAKIT CİNSİ": {"color": "#2b2b2b", "font": "Arial"},
+    "KULLANIM AMACI": {"color": "#2b2b2b", "font": "Arial"},
+    "AZAMİ YÜKLÜ AĞIRLIĞI:": {"color": "#2b2b2b", "font": "Arial"},
+    "RÖMORK AZAMİ YÜKLÜ AĞIRLIĞI": {"color": "#2b2b2b", "font": "Arial"},
+    "MOTOR GÜCÜ": {"color": "#2b2b2b", "font": "Arial"},
+    "TİP ONAY": {"color": "#2b2b2b", "font": "Arial"},
+    "TC KİMLİK": {"color": "#000000", "font": "Arial Black"},
+    "SOYADI": {"color": "#2b2b2b", "font": "Arial"},
+    "ADI": {"color": "#2b2b2b", "font": "Arial"},
+    "ADRESİ": {"color": "#2b2b2b", "font": "Arial"},
+    "ADRES 2": {"color": "#2b2b2b", "font": "Arial"},
+    "MUAYENE GEÇERLİK": {"color": "#2b2b2b", "font": "Arial"},
+    "SİC NO.": {"color": "#19417A", "font": "Times New Roman", "size": 21},
+    "SERİ NO": {"color": "#000000", "font": "Times New Roman Bold", "size": 26},
+    "NO": {"color": "#000000", "font": "Times New Roman Bold", "size": 26}
 }
 
 coords = {
-    "PLAKA": {"x": 53, "y": 141}
+    "VERİLDİĞİ İL İLÇE": {"x": 56, "y": 84},
+    "PLAKA": {"x": 53, "y": 141},
+    "TESCİL SIRA NO": {"x": 94, "y": 195},
+    "MARKASI": {"x": 57, "y": 254},
+    "TİCARİ ADI": {"x": 57, "y": 305},
+    "CİNSİ": {"x": 147, "y": 336},
+    "CİNSİ2": {"x": 55, "y": 360},
+    "İLK TESCİL TARİHİ": {"x": 322, "y": 140},
+    "TESCİL TARİHİ": {"x": 322, "y": 196},
+    "TİPİ": {"x": 430, "y": 251},
+    "MODEL YILI": {"x": 365, "y": 307},
+    "ARAÇ SINIFI": {"x": 515, "y": 307},
+    "RENGİ": {"x": 419, "y": 362},
+    "MOTOR NO": {"x": 257, "y": 417},
+    "ŞASE NO": {"x": 211, "y": 472},
+    "NET AĞIRLIĞI": {"x": 60, "y": 527},
+    "KATAR AĞIRLIĞI": {"x": 60, "y": 582},
+    "KOLTUK SAYISI": {"x": 60, "y": 638},
+    "SİLİNDİR HACMİ": {"x": 60, "y": 696},
+    "YAKIT CİNSİ": {"x": 60, "y": 753},
+    "KULLANIM AMACI": {"x": 60, "y": 809},
+    "AZAMİ YÜKLÜ AĞIRLIĞI:": {"x": 529, "y": 519},
+    "RÖMORK AZAMİ YÜKLÜ AĞIRLIĞI": {"x": 487, "y": 574},
+    "MOTOR GÜCÜ": {"x": 545, "y": 680},
+    "TİP ONAY": {"x": 322, "y": 809},
+    "TC KİMLİK": {"x": 868, "y": 85},
+    "SOYADI": {"x": 833, "y": 137},
+    "ADI": {"x": 784, "y": 194},
+    "ADRESİ": {"x": 653, "y": 261},
+    "ADRES 2": {"x": 652, "y": 282},
+    "MUAYENE GEÇERLİK": {"x": 657, "y": 595},
+    "SİC NO.": {"x": 697, "y": 808},
+    "SERİ NO": {"x": 968, "y": 798},
+    "NO": {"x": 1055, "y": 798}
 }
 
 WAITING_DATA = 0
@@ -60,7 +127,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     fields = list(coords.keys())
     SESSIONS[chat_id] = {"index": 0, "fields": {f: "" for f in fields}, "order": fields}
-    await update.message.reply_text("Merhaba! İlk alan: " + fields[0])
+    await update.message.reply_text("Merhaba! Şimdi bilgileri sırasıyla gireceksiniz.\nİlk alan: " + fields[0])
     return WAITING_DATA
 
 async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
