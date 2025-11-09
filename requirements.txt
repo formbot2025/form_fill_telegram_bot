@@ -1,4 +1,4 @@
 python-telegram-bot==20.6
-Pillow==10.0.1
-setuptools==75.1.0
+Pillow==9.5.0
+setuptools==65.5.1
 wheel
