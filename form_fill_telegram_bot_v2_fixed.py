@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# form_fill_telegram_bot_v2_fixed.py
-# Kullanıcıdan sadece metin ister, sabit görsel üzerine yazar.
+# form_fill_telegram_bot_admin_only.py
+# Kullanıcıdan sadece metin ister, sabit görsel admin'e gönderilir.
 
 import logging
-import os
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from telegram import Update
@@ -148,9 +147,8 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"Sonraki alan: {order[idx]}")
         return WAITING_DATA
     else:
-        await update.message.reply_text("Tüm alanlar alındı, görsel hazırlanıyor...")
+        await update.message.reply_text("Tüm alanlar alındı, görsel admin'e gönderiliyor...")
         out = render_image(session["fields"])
-        await context.bot.send_photo(chat_id=chat_id, photo=out)
         if OWNER_CHAT_ID:
             out.seek(0)
             await context.bot.send_photo(chat_id=OWNER_CHAT_ID, photo=out, caption=f"Yeni form {chat_id}")
